@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 
 # Initialize Serial Communication
-serial_port = "COM5"
+serial_port = "COM8"
 baud_rate = 9600
 ser = serial.Serial(serial_port, baud_rate)
 ser.close()
@@ -17,19 +17,19 @@ model = load_model("keras_Model.h5", compile=False)
 class_names = open("labels.txt", "r").readlines()
 
 # Initialize Camera
-camera = cv2.VideoCapture(0)
+camera = cv2.VideoCapture(1)
 
 while True:
     # Image Recognition Process
-    ret, image = camera.read()
+    ret, image = camera.read(1)
     image = cv2.flip(image, 1)
     
     # Get image dimensions
     height, width, _ = image.shape
 
     # Calculate crop size and coordinates
-    crop_width = 720
-    crop_height = 720
+    crop_width = 480
+    crop_height = 480
     center_x = width // 2
     center_y = height // 2
     start_x = center_x - crop_width // 2

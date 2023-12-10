@@ -1,35 +1,30 @@
-#include <SoftwareSerial.h>
+#include <Servo.h>
 
-// 定义软件串口的RX和TX引脚
-int RX_PIN = 10;  // 将RX_PIN连接到模块的TX
-int TX_PIN = 11;  // 将TX_PIN连接到模块的RX
-
-// 初始化软件串口，将其命名为softSerial
-SoftwareSerial softSerial(RX_PIN, TX_PIN);
+Servo myservo;  // create servo object to control a servo
 
 void setup() {
-  // 打开硬件串口和软件串口
-  Serial.begin(9600);       // 硬件串口
-  softSerial.begin(9600);   // 软件串口
-
-  // 打印消息到硬件串口
-  Serial.println("软件串口已启动");
+  Serial.begin(9600);       // initialize serial communication
+  myservo.attach(37);       // attaches the servo on pin 32 to the servo object
+  pinMode(13,OUTPUT);
 }
 
 void loop() {
-   if (softSerial.available()) {
-    String received = softSerial.readStringUntil('\n');
-    Serial.println(received); // Echo the received data
-    if(received=="Class 1"){
-      Serial.println("OK");
+  if (Serial.available()) {
+    String received = Serial.readStringUntil('\n');
+   
+    if (received == "Class 1") {
+      digitalWrite(13,HIGH);
+      myservo.write(180);   // turn servo to 180 degrees
+      delay(500);
+    } else if (received == "Class 2") {
+      myservo.write(0);     // turn servo to 0 degrees
+      delay(500);
+      digitalWrite(13,HIGH);
+    } else {
+      myservo.write(90);    // for any other input, turn servo to 90 degrees
+    digitalWrite(13,LOW);
+    delay(500);
     }
-    else if (received=="Class 2")
-    {
-      Serial.println("No");
-    }
-    else{
-      Serial.println("STOP");
-    }
-    
   }
+  
 }
